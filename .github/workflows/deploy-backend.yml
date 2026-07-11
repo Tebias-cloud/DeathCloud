@@ -25,7 +25,8 @@ jobs:
 
       - name: Run Tests
         working-directory: ./deathcloud-backend
-        run: npm test || echo "Warning: Tests failed but proceeding to deploy"
+        run: |
+          npm test || echo "Warning: Tests failed but proceeding to deploy"
 
       - name: Deploy to Server via SSH
         uses: appleboy/ssh-action@master
@@ -33,6 +34,6 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: icin
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT || 22 }}
+          port: ${{ secrets.SSH_PORT }}
           script: |
             echo "${{ secrets.SSH_PASSWORD }}" | sudo -S bash -c "cd /var/www/deathcloud/backend && git pull origin main && npm install && pm2 restart back-dev"
