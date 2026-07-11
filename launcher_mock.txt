@@ -1,0 +1,17 @@
+========================================================================
+             DEATHCLOUD GAME LAUNCHER (CLIENT MOCKUP v1.0)
+========================================================================
+
+¡Bienvenido, Piloto del Comando Nexus!
+
+Este es un archivo de descarga temporal que simula el instalador o
+launcher oficial de Death Cloud. 
+
+Una vez que el desarrollo del launcher finalice y se disponga de la
+versión ejecutable (ej. launcher.exe, setup.msi o launcher.zip),
+simplemente reemplace este archivo en el directorio 'public' por el
+instalador real con el nombre de archivo correspondiente.
+
+---
+© 2026 Death Cloud. Todos los derechos reservados.
+========================================================================
