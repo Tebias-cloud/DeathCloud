@@ -8,9 +8,9 @@ Este repositorio está estructurado como un **monorepo** para facilitar la exhib
 
 ## 📁 Estructura del Proyecto
 
-- **[deathcloud-frontend/](file:///c:/Users/esteb/OneDrive/Escritorio/Uni/ProyectosU/deathcloud%20core/deathcloud-frontend)**: Cliente SPA construido con **React.js**, **Vite** y **Vanilla CSS**.
-- **[deathcloud-backend/](file:///c:/Users/esteb/OneDrive/Escritorio/Uni/ProyectosU/deathcloud%20core/deathcloud-backend)**: Servidor REST API y WebSockets con **Node.js**, **Express** y **Socket.io**.
-- **[deathcloud-database/](file:///c:/Users/esteb/OneDrive/Escritorio/Uni/ProyectosU/deathcloud%20core/deathcloud-database)**: Scripts de creación, seedings y migración de base de datos PostgreSQL, junto con sus respectivos scripts de rollback.
+- **[deathcloud-frontend/](./deathcloud-frontend)**: Cliente SPA construido con **React.js**, **Vite** y **Vanilla CSS**.
+- **[deathcloud-backend/](./deathcloud-backend)**: Servidor REST API y WebSockets con **Node.js**, **Express** y **Socket.io**.
+- **[deathcloud-database/](./deathcloud-database)**: Scripts de creación, seedings y migración de base de datos PostgreSQL, junto con sus respectivos scripts de rollback.
 
 ---
 
