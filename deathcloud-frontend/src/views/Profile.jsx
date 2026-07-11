@@ -6,10 +6,10 @@ import { useGame } from '../context/GameContext';
 import { getSessions, revokeSession, getProfile, updateProfile, changePassword, changeDeathCloudId } from '../services/userService';
 
 const PRESET_AVATARS = [
-  { name: 'Mech Shark', url: '/assets/mech_shark.png' },
-  { name: 'Elite Blade', url: '/assets/premium_axe.png' },
-  { name: 'Death Storm', url: '/assets/hero_bg.png' },
-  { name: 'Cyber Luffy', url: '/assets/luffy_cyber.png' },
+  { name: 'Mech Shark', url: 'assets/mech_shark.png' },
+  { name: 'Elite Blade', url: 'assets/premium_axe.png' },
+  { name: 'Death Storm', url: 'assets/hero_bg.png' },
+  { name: 'Cyber Luffy', url: 'assets/luffy_cyber.png' },
   { name: 'Sistema Core', url: 'none' }
 ];
 

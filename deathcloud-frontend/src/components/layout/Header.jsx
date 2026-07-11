@@ -178,7 +178,7 @@ export default function Header({ user, onLogout, onToggleChat, credits, onLoginT
               />
             ) : (
                 <img 
-                  src="/assets/logo.png" 
+                  src="assets/logo.png" 
                   alt="DeathCloud Games" 
                   className="max-h-full max-w-full object-contain"
                   style={gameInfo.theme ? { filter: `drop-shadow(0 0 4px ${getThemeColor(gameInfo.theme)})` } : {}}
