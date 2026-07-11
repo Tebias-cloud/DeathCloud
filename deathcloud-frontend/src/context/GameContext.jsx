@@ -95,9 +95,80 @@ export const GameProvider = ({ children }) => {
         }
       }
     } catch (err) {
-      console.error('Error fetching dynamic catalog:', err);
-      // Fallback local if server is offline (for devs)
-      // Actually, since we're strictly DB-driven now, we just set empty
+      console.warn('Error fetching dynamic catalog, loading showcase mock data:', err);
+      // Fallback local mock data for exhibition/portfolio
+      const mockGames = [
+        {
+          id: 'deathcloud-runner',
+          title: 'DeathCloud Runner',
+          description: 'Esquiva la lluvia ácida y sobrevive en este frenético runner post-apocalíptico de plataformas.',
+          genre: 'Arcade / Platformer',
+          status: 'active',
+          color: '0 210 255',
+          banner_image: '/assets/hero_bg.png',
+          created_at: new Date().toISOString(),
+          leaderboard: [
+            { username: 'CyberGamer', best_score: '24,500' },
+            { username: 'ToxicSurvivor', best_score: '19,800' },
+            { username: 'LuffyCoder', best_score: '15,200' },
+            { username: 'AcidDodger', best_score: '11,000' }
+          ],
+          store: [
+            { id: 'skin-neon', title: 'Skin de Neón', category: 'aspectos', price: 150, image: '/assets/retro_skin.png', desc: 'Una skin brillante para destacar en la nube tóxica.' },
+            { id: 'axe-premium', title: 'Hacha Premium', category: 'aspectos', price: 300, image: '/assets/premium_axe.png', desc: 'Hacha pesada con filo de plasma de alta frecuencia.' },
+            { id: 'skin-toxic', title: 'Traje Tóxico', category: 'aspectos', price: 200, image: '/assets/toxic_skin.png', desc: 'Traje de contención biológica modificado para resistir lluvia ácida.' }
+          ],
+          news: [
+            { id: 'news-1', title: '¡Nueva Actualización 2.2 ya disponible!', desc: 'Se han optimizado los saltos y corregido físicas de lluvia.', date: 'Hoy', image: '/assets/logo.png', likes: 120, rating: 4.8 },
+            { id: 'news-2', title: 'Torneo del Sector 7 el próximo Sábado', desc: 'Inscríbete y compite por una skin legendaria exclusiva.', date: 'Ayer', image: '/assets/hero_bg.png', likes: 85, rating: 4.5 }
+          ]
+        },
+        {
+          id: 'deathcloud-toxic-skies',
+          title: 'Toxic Skies',
+          description: 'Pilota tu nave esquivando nubes de gas mortífero y destruye las defensas de la corporación corrupta.',
+          genre: 'Shoot \'em Up',
+          status: 'active',
+          color: '121 40 202',
+          banner_image: '/assets/mech_shark.png',
+          created_at: new Date().toISOString(),
+          leaderboard: [
+            { username: 'AcePilot', best_score: '98,000' },
+            { username: 'SkyDestroyer', best_score: '84,500' },
+            { username: 'StarFighter', best_score: '72,100' }
+          ],
+          store: [
+            { id: 'ship-shield', title: 'Escudo Reforzado', category: 'aspectos', price: 250, image: '/assets/mech_shark.png', desc: 'Escudo energético de plasma para aguantar más disparos.' }
+          ],
+          news: [
+            { id: 'news-3', title: '¡Nuevos jefes añadidos al final del nivel!', desc: 'Prepárate para combatir contra la nave nodriza de la corporación.', date: 'Hace 2 días', image: '/assets/mech_shark.png', likes: 140, rating: 4.9 }
+          ]
+        },
+        {
+          id: 'deathcloud-2d-shooter',
+          title: '2D Shooter',
+          description: 'Sobrevive a oleadas de robots mutantes en este intenso shooter táctico en dos dimensiones.',
+          genre: 'Action / Shooter',
+          status: 'active',
+          color: '255 0 128',
+          banner_image: '/assets/premium_axe.png',
+          created_at: new Date().toISOString(),
+          leaderboard: [
+            { username: 'RoboKiller', best_score: '5,600' },
+            { username: 'MutantHunter', best_score: '4,800' }
+          ],
+          store: [
+            { id: 'ammo-extended', title: 'Cargador Ampliado', category: 'aspectos', price: 100, image: '/assets/premium_axe.png', desc: 'Aumenta un 50% la capacidad de tu miunición básica.' }
+          ],
+          news: [
+            { id: 'news-4', title: 'Ajuste de equilibrio de armas', desc: 'Se incrementó el daño del rifle táctico y se redujo el tiempo de recarga.', date: 'Hace 3 días', image: '/assets/logo.png', likes: 62, rating: 4.2 }
+          ]
+        }
+      ];
+      setGames(mockGames);
+      if (!activeGameId || !mockGames.some(g => g.id === activeGameId)) {
+        setActiveGameId(mockGames[0].id);
+      }
     } finally {
       setLoading(false);
     }

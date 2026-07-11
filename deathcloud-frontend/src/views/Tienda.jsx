@@ -12,9 +12,10 @@ export default function Tienda({ user, credits, purchasedSkins, buySkin, onLogin
   const [purchaseSuccess, setPurchaseSuccess] = useState(false);
   const [purchaseError, setPurchaseError] = useState(null);
 
+  const storeItems = gameInfo?.store || [];
   const filteredItems = activeCategory === 'todos' 
-    ? gameInfo.store
-    : gameInfo.store.filter(item => item.category === activeCategory);
+    ? storeItems
+    : storeItems.filter(item => item.category === activeCategory);
 
   const [isProcessing, setIsProcessing] = useState(false);
 

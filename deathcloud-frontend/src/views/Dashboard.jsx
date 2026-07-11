@@ -199,10 +199,10 @@ export default function Dashboard({ user, credits, purchasedSkins, buySkin, onLo
 
     const fetchNews = async () => {
       const result = await communityService.getNewsByGame(gameInfo.id);
-      if (result.success && result.data) {
+      if (result.success && result.data && result.data.length > 0) {
         setNews(result.data.slice(0, 3));
       } else {
-        setNews([]);
+        setNews(gameInfo.news || []);
       }
     };
 
