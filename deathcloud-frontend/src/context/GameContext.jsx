@@ -101,6 +101,8 @@ export const GameProvider = ({ children }) => {
         {
           id: 'deathcloud-runner',
           title: 'DeathCloud Runner',
+          displayName: 'DeathCloud Runner',
+          tagline: 'ESQUIVA LA LLUVIA ÁCIDA Y SOBREVIVE',
           description: 'Esquiva la lluvia ácida y sobrevive en este frenético runner post-apocalíptico de plataformas.',
           genre: 'Arcade / Platformer',
           status: 'active',
@@ -108,10 +110,10 @@ export const GameProvider = ({ children }) => {
           banner_image: '/assets/hero_bg.png',
           created_at: new Date().toISOString(),
           leaderboard: [
-            { username: 'CyberGamer', best_score: '24,500' },
-            { username: 'ToxicSurvivor', best_score: '19,800' },
-            { username: 'LuffyCoder', best_score: '15,200' },
-            { username: 'AcidDodger', best_score: '11,000' }
+            { name: 'CyberGamer', score: '24,500', rank: 1 },
+            { name: 'ToxicSurvivor', score: '19,800', rank: 2 },
+            { name: 'LuffyCoder', score: '15,200', rank: 3 },
+            { name: 'AcidDodger', score: '11,000', rank: 4 }
           ],
           store: [
             { id: 'skin-neon', title: 'Skin de Neón', category: 'aspectos', price: 150, image: '/assets/retro_skin.png', desc: 'Una skin brillante para destacar en la nube tóxica.' },
@@ -126,6 +128,8 @@ export const GameProvider = ({ children }) => {
         {
           id: 'deathcloud-toxic-skies',
           title: 'Toxic Skies',
+          displayName: 'Toxic Skies',
+          tagline: 'PILOTA ENTRE EL GAS Y DESTRUYE A LA CORPORACIÓN',
           description: 'Pilota tu nave esquivando nubes de gas mortífero y destruye las defensas de la corporación corrupta.',
           genre: 'Shoot \'em Up',
           status: 'active',
@@ -133,9 +137,9 @@ export const GameProvider = ({ children }) => {
           banner_image: '/assets/mech_shark.png',
           created_at: new Date().toISOString(),
           leaderboard: [
-            { username: 'AcePilot', best_score: '98,000' },
-            { username: 'SkyDestroyer', best_score: '84,500' },
-            { username: 'StarFighter', best_score: '72,100' }
+            { name: 'AcePilot', score: '98,000', rank: 1 },
+            { name: 'SkyDestroyer', score: '84,500', rank: 2 },
+            { name: 'StarFighter', score: '72,100', rank: 3 }
           ],
           store: [
             { id: 'ship-shield', title: 'Escudo Reforzado', category: 'aspectos', price: 250, image: '/assets/mech_shark.png', desc: 'Escudo energético de plasma para aguantar más disparos.' }
@@ -147,6 +151,8 @@ export const GameProvider = ({ children }) => {
         {
           id: 'deathcloud-2d-shooter',
           title: '2D Shooter',
+          displayName: '2D Shooter',
+          tagline: 'SOBREVIVE A OLEADAS DE ROBOTS MUTANTES',
           description: 'Sobrevive a oleadas de robots mutantes en este intenso shooter táctico en dos dimensiones.',
           genre: 'Action / Shooter',
           status: 'active',
@@ -154,8 +160,8 @@ export const GameProvider = ({ children }) => {
           banner_image: '/assets/premium_axe.png',
           created_at: new Date().toISOString(),
           leaderboard: [
-            { username: 'RoboKiller', best_score: '5,600' },
-            { username: 'MutantHunter', best_score: '4,800' }
+            { name: 'RoboKiller', score: '5,600', rank: 1 },
+            { name: 'MutantHunter', score: '4,800', rank: 2 }
           ],
           store: [
             { id: 'ammo-extended', title: 'Cargador Ampliado', category: 'aspectos', price: 100, image: '/assets/premium_axe.png', desc: 'Aumenta un 50% la capacidad de tu miunición básica.' }
