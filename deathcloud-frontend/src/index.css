@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
+
+  body {
+    @apply bg-theme-dark text-theme-text font-sans antialiased overflow-x-hidden transition-colors duration-500;
+    overflow-y: scroll;
+    background-color: rgb(var(--theme-dark));
+    background-image: radial-gradient(circle at 50% 0%, rgb(var(--theme-gradient-start)) 0%, rgb(var(--theme-dark)) 70%);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-wide;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(4, 11, 22, 0.6);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.6);
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-theme-panel backdrop-blur-md border border-theme-neon/20 rounded-xl shadow-lg transition-colors duration-500;
+  }
+  
+  .glass-active {
+    @apply border-theme-neon/60 shadow-neon;
+    background-color: var(--theme-panel);
+  }
+  
+  .neon-text {
+    text-shadow: 0 0 8px var(--theme-neon-glow);
+  }
+
+  .neon-button {
+    @apply relative overflow-hidden font-display font-bold uppercase tracking-wider text-theme-text transition-all duration-300;
+  }
+  
+  .neon-button::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300 pointer-events-none;
+    background-color: var(--theme-neon);
+  }
+
+  .neon-button:hover {
+    @apply shadow-neon-strong text-white border-theme-neon;
+  }
+  
+  .neon-button:hover::before {
+    @apply opacity-20;
+  }
+}

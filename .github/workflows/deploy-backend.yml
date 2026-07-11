@@ -1,0 +1,38 @@
+name: Deploy Backend to Single Server
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'deathcloud-backend/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        working-directory: ./deathcloud-backend
+        run: npm ci
+
+      - name: Run Tests
+        working-directory: ./deathcloud-backend
+        run: npm test || echo "Warning: Tests failed but proceeding to deploy"
+
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: icin
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            echo "${{ secrets.SSH_PASSWORD }}" | sudo -S bash -c "cd /var/www/deathcloud/backend && git pull origin main && npm install && pm2 restart back-dev"

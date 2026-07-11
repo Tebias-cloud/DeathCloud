@@ -1,0 +1,17 @@
+{
+  "name": "deathcloud-database",
+  "version": "1.0.0",
+  "description": "Scripts de Inicialización de Base de Datos para DeathCloud",
+  "main": "init_db_prod.js",
+  "scripts": {
+    "start": "node init_db.js",
+    "prod": "node init_db_prod.js",
+    "check": "node check_db.js",
+    "fill": "node fill_fake_data.js .env"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "pg": "^8.11.3"
+  }
+}

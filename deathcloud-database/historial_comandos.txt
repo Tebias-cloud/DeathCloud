@@ -1,0 +1,32 @@
+-- v1: Creación
+-- Comandos utilizados para crear la base de datos y esquema principal
+CREATE DATABASE app_db;
+\c app_db;
+CREATE SCHEMA diego;
+SET search_path TO diego, public;
+
+-- v1.1: Usuarios nuevos
+-- Comandos para registrar y gestionar el acceso de los pilotos
+CREATE TABLE usuarios (
+    id SERIAL PRIMARY KEY,
+    nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    clave_encriptada VARCHAR(255) NOT NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Ejemplos de uso (insertar usuario nuevo):
+-- INSERT INTO usuarios (nombre_usuario, email, clave_encriptada) VALUES ('Piloto_1', 'piloto@test.com', 'hasheada123');
+
+
+-- v1.2: Mensajes
+-- Comandos utilizados para la transmisión de las comunicaciones globales
+CREATE TABLE mensajes (
+    id SERIAL PRIMARY KEY,
+    usuario VARCHAR(100) NOT NULL,
+    texto TEXT NOT NULL,
+    hora VARCHAR(50) NOT NULL
+);
+
+-- Ejemplos de uso (insertar un mensaje):
+-- INSERT INTO mensajes (usuario, texto, hora) VALUES ('diego', 'aaa', '19:24:00');

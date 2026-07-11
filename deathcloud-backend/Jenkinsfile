@@ -1,0 +1,137 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs 'node20'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo 'Instalando dependencias de Node.js...'
+                sh 'npm install'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            environment {
+                SCANNER_HOME = tool 'sonar-scanner'
+            }
+            steps {
+                echo 'Iniciando escaneo de código estático con SonarQube...'
+                withSonarQubeEnv('SonarQubeCommunity') {
+                    sh "${SCANNER_HOME}/bin/sonar-scanner"
+                }
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Deploy to DEV') {
+            steps {
+                echo 'Desplegando al entorno DEV...'
+                sh 'if [ ! -f ~/.ssh/id_rsa ]; then ssh-keygen -t rsa -b 2048 -N "" -f ~/.ssh/id_rsa; fi'
+                sh 'npm install ssh2 --no-save'
+                writeFile file: 'setup-ssh.js', text: '''
+const { Client } = require('ssh2');
+const fs = require('fs');
+const conn = new Client();
+const pubKeyPath = '/var/lib/jenkins/.ssh/id_rsa.pub';
+if (!fs.existsSync(pubKeyPath)) {
+  console.error('Public key does not exist at ' + pubKeyPath);
+  process.exit(1);
+}
+const pubKey = fs.readFileSync(pubKeyPath, 'utf8').trim();
+conn.on('ready', () => {
+  console.log('Connected to Server B to register public key...');
+  const cmd = `mkdir -p ~/.ssh && touch ~/.ssh/authorized_keys && grep -qF '${pubKey}' ~/.ssh/authorized_keys || echo '${pubKey}' >> ~/.ssh/authorized_keys && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys`;
+  conn.exec(cmd, (err, stream) => {
+    if (err) throw err;
+    stream.on('close', (code) => {
+      console.log('SSH Key registration finished with code ' + code);
+      conn.end();
+      process.exit(code);
+    })
+    .on('data', (d) => console.log(d.toString()))
+    .stderr.on('data', (d) => console.error(d.toString()));
+  });
+}).connect({
+  host: process.env.SSH_HOST || "192.168.50.24", 
+  port: process.env.SSH_PORT || 22, 
+  username: "icin", 
+  password: "Icin2026"
+});
+'''
+                sh 'node setup-ssh.js'
+                
+                writeFile file: 'deploy-ci-dev.js', text: '''
+const { Client } = require('ssh2');
+const fs = require('fs');
+const conn = new Client();
+conn.on('ready', () => {
+  conn.exec('echo "Icin2026" | sudo -S bash -c "cd /var/www/deathcloud/backend && git pull origin main && npm install && pm2 restart back-dev"', (err, stream) => {
+    if (err) throw err;
+    stream.on('close', (code) => { conn.end(); process.exit(code); })
+          .on('data', (d) => console.log(d.toString()))
+          .stderr.on('data', (d) => console.error(d.toString()));
+  });
+}).connect({
+  host: process.env.SSH_HOST || "192.168.50.24", 
+  port: process.env.SSH_PORT || 22, 
+  username: "icin", 
+  privateKey: fs.readFileSync(process.env.SSH_PRIVATE_KEY_PATH || '/var/lib/jenkins/.ssh/id_rsa') 
+});
+'''
+                sh 'node deploy-ci-dev.js'
+            }
+        }
+
+        stage('Deploy to PROD') {
+            when { branch 'production' }
+            steps {
+                echo 'Desplegando al entorno PROD...'
+                sh 'npm install ssh2 --no-save'
+                writeFile file: 'deploy-ci-prod.js', text: '''
+const { Client } = require('ssh2');
+const fs = require('fs');
+const conn = new Client();
+conn.on('ready', () => {
+  // Asegúrate de que la carpeta de PROD se llame /var/www/deathcloud/backend-prod y el pm2 sea back-prod
+  conn.exec('echo "Icin2026" | sudo -S bash -c "cd /var/www/deathcloud/backend-prod && git pull origin production && npm install && pm2 restart back-prod"', (err, stream) => {
+    if (err) throw err;
+    stream.on('close', (code) => { conn.end(); process.exit(code); })
+          .on('data', (d) => console.log(d.toString()))
+          .stderr.on('data', (d) => console.error(d.toString()));
+  });
+}).connect({
+  host: process.env.SSH_HOST || "192.168.50.24", 
+  port: process.env.SSH_PORT || 22, 
+  username: "icin", 
+  privateKey: fs.readFileSync(process.env.SSH_PRIVATE_KEY_PATH || '/var/lib/jenkins/.ssh/id_rsa') 
+});
+'''
+                sh 'node deploy-ci-prod.js'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Limpiando el espacio de trabajo...'
+            cleanWs()
+        }
+        success {
+            echo '¡El pipeline se completó con éxito! 🎉'
+        }
+        failure {
+            echo 'Hubo un error en el pipeline. Por favor revisa los logs. ❌'
+        }
+    }
+}
