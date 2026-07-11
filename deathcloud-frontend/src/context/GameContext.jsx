@@ -106,7 +106,7 @@ export const GameProvider = ({ children }) => {
           description: 'Esquiva la lluvia ácida y sobrevive en este frenético runner post-apocalíptico de plataformas.',
           genre: 'Arcade / Platformer',
           status: 'active',
-          color: '0 210 255',
+          theme: '0 210 255',
           banner_image: 'assets/hero_bg.png',
           created_at: new Date().toISOString(),
           leaderboard: [
@@ -133,7 +133,7 @@ export const GameProvider = ({ children }) => {
           description: 'Pilota tu nave esquivando nubes de gas mortífero y destruye las defensas de la corporación corrupta.',
           genre: 'Shoot \'em Up',
           status: 'active',
-          color: '121 40 202',
+          theme: '121 40 202',
           banner_image: 'assets/mech_shark.png',
           created_at: new Date().toISOString(),
           leaderboard: [
@@ -156,7 +156,7 @@ export const GameProvider = ({ children }) => {
           description: 'Sobrevive a oleadas de robots mutantes en este intenso shooter táctico en dos dimensiones.',
           genre: 'Action / Shooter',
           status: 'active',
-          color: '255 0 128',
+          theme: '255 0 128',
           banner_image: 'assets/premium_axe.png',
           created_at: new Date().toISOString(),
           leaderboard: [
