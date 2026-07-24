@@ -1,137 +1,104 @@
-# DeathCloud - Backend Server
+# ⚙️ DeathCloud Backend - Servidor API REST & WebSockets
 
-El servidor Backend de la plataforma de juegos DeathCloud, construido con Node.js, Express y WebSockets para comunicación en tiempo real.
+El servidor backend del ecosistema **DeathCloud**, construido sobre **Node.js** con el framework **Express** para la API REST y **Socket.io** para la mensajería en tiempo real. 
 
-## 🏗 Arquitectura
-El backend sigue una arquitectura multicapa (N-Tier Architecture). Separando las responsabilidades de enrutamiento (`/routes`), lógica de negocio (`/services`), y acceso a datos (`/repositories`). Utilizamos el patrón Singleton en los servicios y repositorios. La base de datos es Multi-Tenant, utilizando un esquema público para datos core y esquemas dedicados (`schema_name`) para la información específica de cada juego.
-
-## 🛠 Tecnologías Utilizadas
-- **Node.js & Express:** Framework HTTP y ruteo.
-- **PostgreSQL:** Base de datos relacional.
-- **Socket.io:** Comunicación en tiempo real (Chat y Estados).
-- **JWT & Bcrypt:** Autenticación segura y cifrado de contraseñas.
-- **Multer:** Subida y gestión de archivos e imágenes.
-- **Jest & Supertest:** Framework para pruebas unitarias.
-
-## 📋 Requisitos Previos
-- Node.js v18 o superior
-- npm v9 o superior
-- Servidor PostgreSQL activo
-- PM2 instalado globalmente (`npm install -g pm2`) para despliegue en servidor.
-
-## 📦 Instalación
-
-1. **Clona el repositorio** e instala las dependencias:
-   ```bash
-   npm install
-   ```
-
-2. **Configuración de Variables de Entorno:**
-   Para poder levantar el proyecto en tu máquina (desarrollo), necesitas configurar las variables de entorno.
-   - Crea una copia del archivo `.env.example` y llámala `.env.dev` (este es el archivo que se usará para desarrollo local).
-   - Abre `.env.dev` y completa los datos de conexión a la base de datos local.
-   ```env
-   PORT=3000
-   DB_USER=postgres
-   DB_HOST=localhost
-   DB_PASSWORD=tu_clave
-   DB_PORT=5432
-   DB_NAME=death_cloud_dev
-   JWT_SECRET=tu_secreto_super_seguro
-   FRONTEND_URL=http://localhost:5173
-   ```
-
-## 🚀 Uso y Entornos de Ejecución
-
-### Cómo conectarse a la BD y ejecutar migraciones
-Toda la lógica de migración y populación de datos ha sido movida a la carpeta `deathcloud-database`.
-Para inicializar tu base de datos en local:
-```bash
-cd deathcloud-database
-npm install
-node setup_db.js
-```
-
-### Cómo levantar Backend: Local
-Este es el que debes usar mientras escribes código en tu computadora:
-```bash
-npm run dev
-# o para recarga automática al guardar cambios (Nodemon):
-npm run dev:watch
-```
-
-### Cómo levantar Backend: Dev (Servidor Remoto)
-Cuando el código se despliega en el servidor (ej: `192.168.50.24`), el entorno **DEV** se expone en el **puerto 8080** (`http://192.168.50.24:8080` vía Nginx).
-- El backend de DEV corre internamente en el puerto 3000 y usa `.env.dev`.
-- Para levantarlo manualmente con PM2:
-```bash
-cd /var/www/proyecto/back-dev
-pm2 start server.js --name back-dev
-pm2 save
-```
-
-### Cómo desplegar en Producción
-El entorno de **PROD** es el oficial y se expone directo en la **IP sola (Puerto 80)** (`http://192.168.50.24`).
-- El backend de PROD corre internamente en el puerto 4000 usando `.env.prod`.
-- Para desplegar en producción:
-```bash
-cd /var/www/proyecto/back-prod
-git pull origin main
-npm install
-pm2 restart back-prod
-```
-
-## 🌐 URLs del Sistema
-- **URL de Desarrollo (DEV API):** `http://192.168.50.24:8080/api`
-- **URL de Producción (PROD API):** `http://192.168.50.24/api`
-
-## 📂 Rutas y Directorios en el Servidor
-- **Directorio Backend Dev:** `/var/www/proyecto/back-dev/`
-- **Directorio Backend Prod:** `/var/www/proyecto/back-prod/`
-- **Logs de PM2:** `~/.pm2/logs/`
-- **Logs Locales del App:** `/var/www/proyecto/back-prod/logs/prod/error.log`
-
-## 🧪 Testing y Calidad
-
-### Cómo ejecutar pruebas unitarias
-El backend utiliza Jest para las pruebas de los servicios principales.
-```bash
-npm run test
-```
-
-### Cómo ejecutar SonarScanner desde local
-Para analizar la calidad del código, deuda técnica y cobertura:
-1. Asegúrate de tener SonarQube corriendo localmente (puerto 9000).
-2. Ejecuta el scanner apuntando al servidor de Sonar:
-```bash
-sonar-scanner \
-  -Dsonar.projectKey=deathcloud-backend \
-  -Dsonar.sources=. \
-  -Dsonar.host.url=http://localhost:9000 \
-  -Dsonar.login=tu_token_generado
-```
-
-## 📁 Rutas de la API (Endpoints Principales)
-Todas las rutas protegidas requieren enviar un token JWT válido en las cabeceras: `Authorization: Bearer <token>`.
-
-### Autenticación (`/api`)
-- `POST /login`: Valida credenciales e inicia sesión.
-- `POST /register`: Registra un nuevo usuario.
-
-### Usuarios (`/api`)
-- `GET /users/me`: Obtiene los detalles de la sesión actual.
-- `PUT /users/me`: Actualiza avatar o nickname.
-
-### Tienda / Catálogo (`/api/catalog`)
-- `GET /store`: Devuelve todos los artículos de la tienda.
-- `GET /games`: Devuelve la información de los juegos.
-
-### Administrador (`/api/admin`) *(Requiere rol `admin`)*
-- `GET /users`: Lista a todos los usuarios registrados.
-- `GET /api/analytics/dashboard`: Devuelve las estadísticas y reporte del sistema.
-
-### Sistema
-- `GET /api/version`: Devuelve la versión actual del backend desplegado.
+El servidor implementa validación de tokens JWT, control administrativo de cuentas de usuario, soporte mediante tickets y una arquitectura resiliente de base de datos Postgres con simulador en memoria para pruebas locales.
 
 ---
-**DeathCloud** - Desarrollado para gestión de catálogo, soporte técnico e identidades centralizadas.
+
+## 🛠️ Tecnologías Utilizadas (Tech Stack)
+
+*   **Entorno de Ejecución:** Node.js
+*   **Framework Web:** Express.js
+*   **Mensajería en Vivo (Sockets):** Socket.io
+*   **Base de Datos Driver:** `pg` (PostgreSQL client pool)
+*   **Cifrado y Seguridad:** `bcryptjs` (para contraseñas) y `jsonwebtoken` (JWT)
+*   **Variables de Entorno:** `dotenv`
+
+---
+
+## 🏛️ Arquitectura del Servidor
+
+El backend implementa una arquitectura estructurada por capas físicas:
+
+*   **Rutas (`routes/`):** Define los endpoints de la API REST y aplica middlewares de validación de tokens.
+*   **Controladores (`controllers/`):** Recibe las solicitudes HTTP, delega validaciones y orquesta las consultas a la base de datos.
+*   **Configuración (`config/`):** Contiene el gestor de base de datos ([db.js](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-backend/config/db.js)) que administra las conexiones Postgres y el fallback simulado.
+
+---
+
+## 🌟 Características de la Aplicación
+
+### 1. Sistema de Contingencia (Mock Database Fallback)
+*   **Detección de Caída:** El gestor de base de datos tiene configurado un tiempo límite de conexión de 8000ms. Si la conexión al host remoto falla (error `ECONNREFUSED` o timeout), intercepta la excepción, cambia el estado del backend a `isLocalMockMode = true` y conmuta de manera transparente todas las llamadas SQL de los controladores hacia un simulador local en memoria (`simulateQuery`), permitiendo que el servidor siga corriendo.
+
+### 2. Sincronización Automática de Esquemas
+*   **Inicialización al Boot:** Al iniciar, el backend ejecuta sentencias `CREATE TABLE IF NOT EXISTS` para asegurar que las tablas compartidas (`usuarios`, `mensajes`, `amigos`, `tickets`) estén creadas.
+*   **Mapeo de Juegos:** Consulta la función `getGamePool` para crear esquemas independientes por juego (`runner`, `skies`, `game2d`) y poblar tablas de estadísticas por defecto si están vacías.
+
+### 3. Mensajería Socket.io con Podado de Base de Datos
+*   **Chat en Vivo:** Inicia un servidor de sockets que escucha el evento `enviar_mensaje`.
+*   **Estrategia de Almacenamiento:** Para evitar el crecimiento infinito de la tabla de mensajería, cada inserción limpia la base de datos eliminando registros antiguos por encima de las últimas 1000 entradas (`DELETE FROM mensajes WHERE id NOT IN (SELECT id ... LIMIT 1000)`).
+
+---
+
+## 📂 Estructura del Proyecto
+
+```text
+deathcloud-backend/
+├── config/
+│   └── db.js                 # Pool de conexiones PostgreSQL y simulador en memoria
+├── controllers/              # Controladores de endpoints (auth, tickets, ranking, tienda)
+├── middleware/               # Validación de tokens JWT y roles de usuario
+├── routes/                   # Definición de rutas HTTP de la API
+├── public/uploads/           # Carpeta para archivos estáticos subidos (avatars)
+├── server.js                 # Punto de entrada principal e inicialización de Socket.io
+└── package.json              # Dependencias del proyecto
+```
+
+---
+
+## 🛠️ Instalación y Configuración Local
+
+1.  **Instalar dependencias:**
+    ```bash
+    npm install
+    ```
+
+2.  **Configurar Variables de Entorno (.env):**
+    Crea un archivo `.env` en la raíz y configura tus variables:
+    ```ini
+    PORT=3000
+    NODE_ENV=development
+    JWT_SECRET=tu-clave-secreta-jwt
+    DB_USER=usuario_postgres
+    DB_PASSWORD=clave_postgres
+    DB_HOST=localhost
+    DB_PORT=5432
+    DB_NAME=death_cloud_dev
+    FRONTEND_URL=http://localhost:5173
+    ```
+
+3.  **Iniciar Servidor de Desarrollo:**
+    ```bash
+    npm run dev
+    ```
+
+---
+
+## ⚙️ Decisiones Técnicas y Limitaciones Detectadas
+
+*   **Conexiones Ad-Hoc en Catálogo:** El archivo `catalogController.js` no utiliza el pool compartido de `config/db.js`. Crea su propia conexión `pg.Pool` apuntando directamente al nombre de base de datos `death_cloud_prod`. Como resultado, los endpoints del catálogo de juegos fallan si no existe dicha base de datos, ignorando la simulación local del backend.
+*   **Manejo de VPN Legacy:** La configuración original de producción apunta al host de base de datos `192.168.50.24` (servidor de red privada de la universidad), el cual se encuentra actualmente inaccesible.
+
+---
+
+## 📝 Informe de Auditoría Independiente
+
+Para un análisis técnico objetivo de deudas y calidad del servidor:
+📄 **[Reporte de Revisión de Backend (REVIEW_REPORT.md)](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-backend/REVIEW_REPORT.md)**
+
+---
+
+## 📄 Licencia
+Este proyecto se distribuye bajo la Licencia **MIT**.

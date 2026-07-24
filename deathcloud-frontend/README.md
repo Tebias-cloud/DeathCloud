@@ -1,91 +1,99 @@
-# DeathCloud - Frontend (React / Vite)
+# 🌐 DeathCloud Frontend - Interfaz de Usuario React
 
-La interfaz de usuario del sistema DeathCloud. Provee un portal completo donde los jugadores pueden conectarse, chatear, acceder a la tienda de e-points, consultar el catálogo de juegos, administrar su perfil, abrir tickets de soporte y donde los administradores pueden gestionar toda la plataforma.
+La interfaz de usuario del ecosistema **DeathCloud**. Es una aplicación web SPA (Single Page Application) construida con **React.js** y **Vite**, que provee un portal completo donde los jugadores pueden autenticarse, chatear en tiempo real, ver rankings, acceder a la tienda de skins y gestionar sus perfiles.
 
-## 🏗 Arquitectura
-El frontend sigue una arquitectura basada en componentes bajo el patrón de diseño Container-Presenter, separando las vistas (`/views`) de los componentes reusables (`/components`). La gestión del estado global se realiza mediante `Zustand` (en `/store`), y la comunicación de eventos en tiempo real se maneja a través de `socket.io-client`. El enrutamiento es administrado por `react-router-dom` con protección de rutas (Auth Guards).
+La aplicación adapta dinámicamente su diseño visual y temas de colores según el juego activo que el usuario seleccione en el catálogo.
 
-## 🛠 Tecnologías Utilizadas
-- **React.js 18:** Librería principal de la interfaz.
-- **Vite:** Empaquetador extremadamente rápido (HMR).
-- **Tailwind CSS:** Para estilos y diseño rápido.
-- **React Router DOM:** Manejo de múltiples rutas y vistas protegidas.
-- **Zustand:** Manejo del estado global de la aplicación (Autenticación y Tienda).
-- **Socket.io-client:** Cliente para el chat en tiempo real.
+---
 
-## 📋 Requisitos Previos
-- Node.js v18 o superior
-- npm v9 o superior
-- Servidor Backend DeathCloud corriendo y accesible (local o remoto).
+## 🛠️ Tecnologías Utilizadas
 
-## 📦 Instalación
+*   **Herramienta de Compilación:** Vite
+*   **Biblioteca de UI:** React (v18+)
+*   **Enrutamiento:** `react-router-dom` (v6)
+*   **Estilos:** Tailwind CSS y CSS Vanilla
+*   **Comunicaciones Sockets:** `socket.io-client`
+*   **Iconos:** `react-icons`
 
-1. **Clona el repositorio** e instala las dependencias:
-   ```bash
-   npm install
-   ```
+---
 
-2. **Configuración de Variables de Entorno:**
-   Para levantar el frontend localmente y que apunte a tu backend de desarrollo, debes configurar las variables de entorno de Vite.
-   - Existen dos archivos preconfigurados: `.env.development` (para local) y `.env.production` (para el servidor).
-   - Verifica que `.env.development` esté apuntando hacia tu servidor backend local (usualmente puerto 3000):
-   ```env
-   VITE_API_URL=http://localhost:3000
-   ```
+## 🏛️ Arquitectura del Cliente
 
-## 🚀 Uso y Entornos
+La aplicación está organizada bajo los siguientes directorios de React:
 
-### Cómo levantar Frontend: Local
-Este comando es el que debes usar al programar. Cargará `.env.development`.
-```bash
-npm run dev
+*   **Contexto (`context/`):** Contiene [GameContext.jsx](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-frontend/src/context/GameContext.jsx) que gestiona la carga dinámica del catálogo de juegos, y aplica los colores del tema de cada juego al elemento raíz de la página.
+*   **Vistas (`views/`):** Páginas que se renderizan dentro del layout principal (Dashboard de jugador, Tienda de skins, Comunidad, Rankings, tickets de soporte y el Panel administrativo).
+*   **Lobby Chat (`components/chat/`):** Implementa el panel lateral [LiveChatPanel.jsx](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-frontend/src/components/chat/LiveChatPanel.jsx) que conecta el socket global.
+
+---
+
+## 🌟 Características de la Aplicación
+
+### 1. Inyección de Temas Dinámica
+*   **Tematización en Caliente:** Al cambiar de juego, `GameContext` lee los colores definidos en la propiedad `theme` del juego (almacenada en JSONB en la base de datos) y los escribe directamente como variables CSS en el `documentElement` (raíz del DOM), modificando el estilo visual del panel instantáneamente.
+
+### 2. Panel de Chat en Vivo y Amigos
+*   **Mensajería Instantánea:** Se conecta de manera asíncrona a la pasarela de sockets del backend. Escucha y renderiza el historial inicial y los nuevos mensajes.
+*   **Lista de Amigos:** Lógica integrada para ver solicitudes entrantes/salientes y lista de amigos agregados mediante consultas asíncronas a la base de datos.
+*   **Silenciar Usuarios:** Permite silenciar a usuarios específicos del chat, guardando de forma local los nombres silenciados en `localStorage`.
+
+### 3. Simulador de Descarga de Lanzador
+*   **Mock Launcher:** El Dashboard simula la descarga del launcher oficial con una barra de progreso animada, gatillando finalmente la descarga de un archivo de prueba.
+
+---
+
+## 📂 Estructura del Proyecto
+
+```text
+deathcloud-frontend/
+├── src/
+│   ├── components/           # Componentes comunes de UI y layout (MainLayout, Header)
+│   │   └── chat/             # Panel de chat en vivo (LiveChatPanel)
+│   ├── context/              # Contexto de estado del catálogo de juegos (GameContext)
+│   ├── views/                # Vistas principales del enrutador de React
+│   ├── App.jsx               # Lógica global, enrutamiento y sesión de usuario
+│   ├── main.jsx              # Inicialización de React y render en el DOM
+│   └── index.css             # Estilos CSS generales y directivas Tailwind
+├── index.html                # Punto de entrada de carga estática de Vite
+├── tailwind.config.js        # Configuraciones de estilos y temas de Tailwind
+└── package.json              # Dependencias del proyecto
 ```
-La aplicación se lanzará en `http://localhost:5173`. Vite se encarga del recargado en vivo (Hot Module Replacement) cada vez que guardas un archivo.
 
-### Cómo levantar Frontend: Dev (Servidor Remoto)
-El entorno de desarrollo en el servidor remoto se sirve mediante Nginx en el puerto 8080. Para levantarlo manualmente en el servidor:
-```bash
-cd /var/www/proyecto/front-dev
-npm install
-npm run build
-```
-Nginx ya está configurado para servir la carpeta `/var/www/proyecto/front-dev/dist` en `http://192.168.50.24:8080`.
+---
 
-### Cómo desplegar en Producción
-Para desplegar manualmente en producción (puerto 80):
-```bash
-cd /var/www/proyecto/front-prod
-git pull origin main
-npm install
-npm run build
-```
-Nginx servirá automáticamente los archivos actualizados desde `/var/www/proyecto/front-prod/dist` en `http://192.168.50.24`.
+## 🛠️ Instalación y Configuración Local
 
-## 🌐 URLs del Sistema
+1.  **Instalar dependencias:**
+    ```bash
+    npm install
+    ```
 
-- **URL de Desarrollo (DEV):** `http://192.168.50.24:8080`
-- **URL de Producción (PROD):** `http://192.168.50.24`
+2.  **Configurar Variables de Entorno (.env.development):**
+    Asegúrate de que la variable de desarrollo apunte al backend local:
+    ```ini
+    VITE_API_URL=http://localhost:3000/api
+    ```
 
-## 🔑 Credenciales de Prueba
-Puedes utilizar las siguientes credenciales para probar el sistema:
-- **Administrador Global:**
-  - Correo: `admin@deathcloud.com`
-  - Contraseña: `admin123`
+3.  **Iniciar Servidor de Desarrollo:**
+    ```bash
+    npm run dev
+    ```
 
-## 📂 Rutas y Directorios en el Servidor
-- **Directorio Frontend Dev:** `/var/www/proyecto/front-dev/`
-- **Directorio Frontend Prod:** `/var/www/proyecto/front-prod/`
-- **Build Generado:** `/var/www/proyecto/front-prod/dist/`
-- **Configuración Nginx:** `/etc/nginx/conf.d/proyecto.conf`
-- **Logs de Acceso Nginx:** `/var/log/nginx/access.log`
-- **Logs de Error Nginx:** `/var/log/nginx/error.log`
+---
 
-## 🗂 Estructura de Directorios Principal
-- `/src/components/`: Componentes modulares y reutilizables (Botones, Chat global, Layouts).
-- `/src/views/`: Vistas de nivel de página (Login, Register, Dashboard, AdminDashboard, AnalyticsDashboard, Ranking).
-- `/src/store/`: Manejadores de estado global con Zustand (`authStore.js`).
-- `/src/utils/`: Funciones de utilidad y formateadores.
-- `/public/assets/`: Recursos estáticos locales que no pasan por el bundler.
+## ⚙️ Limitaciones y Deuda Técnica Detectada
 
-## 🛡️ Rutas Protegidas y Roles
-El frontend maneja un sistema de rutas privadas (`PrivateRoute`) que previene a los usuarios deslogueados ver páginas del juego, y un sistema de rutas para administradores que restringe el acceso al `AdminDashboard` (`/admin`) y al `AnalyticsDashboard` (`/admin/analytics`) a los usuarios con rol `'admin'`.
+*   **Peticiones Hardcodeadas a Localhost:** Los componentes de [Ranking.jsx](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-frontend/src/views/Ranking.jsx#L15) y [Dashboard.jsx](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-frontend/src/views/Dashboard.jsx#L75) realizan llamadas `fetch` directamente a `http://localhost:3000` para consultar clasificaciones. Ignoran las utilidades dinámicas y las variables de entorno, fallando si la API corre en otra IP/puerto.
+*   **IP de Universidad Legacy:** El archivo `.env.production` apunta a `http://192.168.50.24/api`, requiriendo modificación para despliegues públicos alternativos.
+
+---
+
+## 📝 Informe de Auditoría Independiente
+
+Para una revisión técnica de la calidad del código:
+📄 **[Reporte de Revisión del Frontend (REVIEW_REPORT.md)](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-frontend/REVIEW_REPORT.md)**
+
+---
+
+## 📄 Licencia
+Este proyecto se distribuye bajo la Licencia **MIT**.
