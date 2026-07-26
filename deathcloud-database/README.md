@@ -16,9 +16,9 @@ El sistema utiliza bases de datos relacionales **PostgreSQL**, con un diseño se
 
 ---
 
-## 🏛️ Estructura del Esquema de Datos
+## 🏛️ Estructura del Esquema de Datos Original
 
-Los scripts crean la siguiente arquitectura relacional en PostgreSQL:
+Los scripts de inicialización crean la siguiente arquitectura relacional en PostgreSQL:
 
 ### 1. Esquema Público (Tablas Compartidas)
 *   `usuarios`: Almacena las cuentas de jugador con credenciales encriptadas y balances de créditos.
@@ -35,15 +35,6 @@ Cada juego de la plataforma posee sus propias tablas bajo un esquema independien
 *   `user_skins`: Historial de aspectos de jugador comprados.
 *   `user_stats`: Tabla de marcas (score) para la clasificación (Leaderboard).
 *   `community_posts` / `community_replies`: Foros de discusión específicos de cada juego.
-
----
-
-## ⚙️ Descripción de los Scripts
-
-*   [init_db.js](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-database/init_db.js): Inicializa la base de datos local de desarrollo creando las tablas en el esquema público y esquemas por juego. No destruye datos existentes.
-*   [init_db_prod.js](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-database/init_db_prod.js): Script de inicialización de producción. Realiza un vaciado total (`DROP SCHEMA ... CASCADE`) y re-crea toda la estructura sembrando las tablas de catálogo y un usuario administrador por defecto (`admin / admin123`).
-*   [create_db.js](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-database/create_db.js): Intenta conectarse al host Postgres y crear la base de datos física.
-*   [check_db.js](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-database/check_db.js): Realiza una conexión de prueba y reporta las tablas existentes en el search_path.
 
 ---
 
@@ -65,24 +56,11 @@ Cada juego de la plataforma posee sus propias tablas bajo un esquema independien
     ```
 
 3.  **Crear e Inicializar Base de Datos:**
+    Para crear e inicializar la base de datos física local:
     ```bash
     node create_db.js
     node init_db.js
     ```
-
----
-
-## ⚠️ Limitaciones y Deuda Técnica Detectada
-
-*   **Nombre de DB Hardcodeado en Producción:** El archivo `init_db_prod.js` tiene configurado el parámetro `PROD_DB = 'death_cloud_prod'` de forma fija. Ignora el valor de `DB_NAME` presente en `.env` e intentará forzar la inicialización sobre dicha base de datos.
-*   **Comandos Destructivos:** El script de producción ejecuta sentencias `DROP SCHEMA ... CASCADE` al arrancar, lo que elimina de manera definitiva toda la base de datos sin confirmación intermedia.
-
----
-
-## 📝 Informe de Auditoría Independiente
-
-Para un análisis detallado de deudas y de la arquitectura de la base de datos:
-📄 **[Reporte de Revisión de Base de Datos (REVIEW_REPORT.md)](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-database/REVIEW_REPORT.md)**
 
 ---
 

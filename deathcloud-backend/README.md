@@ -23,14 +23,14 @@ El backend implementa una arquitectura estructurada por capas físicas:
 
 *   **Rutas (`routes/`):** Define los endpoints de la API REST y aplica middlewares de validación de tokens.
 *   **Controladores (`controllers/`):** Recibe las solicitudes HTTP, delega validaciones y orquesta las consultas a la base de datos.
-*   **Configuración (`config/`):** Contiene el gestor de base de datos ([db.js](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-backend/config/db.js)) que administra las conexiones Postgres y el fallback simulado.
+*   **Configuración (`config/`):** Contiene el gestor de base de datos (`db.js`) que administra las conexiones Postgres y el fallback simulado.
 
 ---
 
-## 🌟 Características de la Aplicación
+## 🌟 Características del Servidor Original
 
 ### 1. Sistema de Contingencia (Mock Database Fallback)
-*   **Detección de Caída:** El gestor de base de datos tiene configurado un tiempo límite de conexión de 8000ms. Si la conexión al host remoto falla (error `ECONNREFUSED` o timeout), intercepta la excepción, cambia el estado del backend a `isLocalMockMode = true` y conmuta de manera transparente todas las llamadas SQL de los controladores hacia un simulador local en memoria (`simulateQuery`), permitiendo que el servidor siga corriendo.
+*   **Detección de Caída:** El gestor de base de datos tiene configurado un tiempo límite de conexión de 8000ms. Si la conexión al host remoto falla (error `ECONNREFUSED` o timeout), cambia el estado del backend a `isLocalMockMode = true` y conmuta de manera transparente todas las llamadas SQL hacia un simulador local en memoria (`simulateQuery`), permitiendo que el servidor siga corriendo.
 
 ### 2. Sincronización Automática de Esquemas
 *   **Inicialización al Boot:** Al iniciar, el backend ejecuta sentencias `CREATE TABLE IF NOT EXISTS` para asegurar que las tablas compartidas (`usuarios`, `mensajes`, `amigos`, `tickets`) estén creadas.
@@ -38,7 +38,7 @@ El backend implementa una arquitectura estructurada por capas físicas:
 
 ### 3. Mensajería Socket.io con Podado de Base de Datos
 *   **Chat en Vivo:** Inicia un servidor de sockets que escucha el evento `enviar_mensaje`.
-*   **Estrategia de Almacenamiento:** Para evitar el crecimiento infinito de la tabla de mensajería, cada inserción limpia la base de datos eliminando registros antiguos por encima de las últimas 1000 entradas (`DELETE FROM mensajes WHERE id NOT IN (SELECT id ... LIMIT 1000)`).
+*   **Estrategia de Almacenamiento:** Para evitar el crecimiento infinito de la tabla de mensajería, cada inserción limpia la base de datos de producción eliminando registros antiguos por encima de las últimas 1000 entradas (`DELETE FROM mensajes WHERE id NOT IN (SELECT id ... LIMIT 1000)`).
 
 ---
 
@@ -83,20 +83,6 @@ deathcloud-backend/
     ```bash
     npm run dev
     ```
-
----
-
-## ⚙️ Decisiones Técnicas y Limitaciones Detectadas
-
-*   **Conexiones Ad-Hoc en Catálogo:** El archivo `catalogController.js` no utiliza el pool compartido de `config/db.js`. Crea su propia conexión `pg.Pool` apuntando directamente al nombre de base de datos `death_cloud_prod`. Como resultado, los endpoints del catálogo de juegos fallan si no existe dicha base de datos, ignorando la simulación local del backend.
-*   **Manejo de VPN Legacy:** La configuración original de producción apunta al host de base de datos `192.168.50.24` (servidor de red privada de la universidad), el cual se encuentra actualmente inaccesible.
-
----
-
-## 📝 Informe de Auditoría Independiente
-
-Para un análisis técnico objetivo de deudas y calidad del servidor:
-📄 **[Reporte de Revisión de Backend (REVIEW_REPORT.md)](file:///c:/Users/Esteban/Desktop/proyectosT/deathcloud-backend/REVIEW_REPORT.md)**
 
 ---
 
