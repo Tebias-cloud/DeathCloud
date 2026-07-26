@@ -81,7 +81,7 @@ export default function AdminDashboard({ user }) {
 
   // URL para archivos subidos (imágenes). Proxeado via Nginx o directo al backend.
   const getUploadsUrl = (relativePath) => {
-    if (!relativePath || relativePath.startsWith('http') || relativePath.startsWith('blob')) return relativePath;
+    if (!relativePath || relativePath.startsWith('http') || relativePath.startsWith('blob') || relativePath.startsWith('data:')) return relativePath;
     const base = (import.meta.env.VITE_API_URL || "/api").replace(/\/api$/, "");
     return `${base}${relativePath}`;
   };
@@ -140,7 +140,7 @@ export default function AdminDashboard({ user }) {
   const getImageUrl = (imagePath) => {
     if (!imagePath || imagePath === "none" || imagePath === "not-found")
       return imagePath;
-    if (imagePath.startsWith("http")) return imagePath;
+    if (imagePath.startsWith("http") || imagePath.startsWith("blob") || imagePath.startsWith("data:")) return imagePath;
     const base = (import.meta.env.VITE_API_URL || "/api").replace(/\/api$/, "");
     return `${base}${imagePath}`;
   };

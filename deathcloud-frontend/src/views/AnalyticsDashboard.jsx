@@ -173,18 +173,18 @@ const AnalyticsDashboard = () => {
             const disapproval = d / total;
             // Best news is highest approval with some volume
             if (approval > bestRatio && total > 5) { 
-              bestRatio = approval; bestNews = news.titulo; bestLikes = l; bestDislikes = d; bestInt = news.total_interacciones; 
+              bestRatio = approval; bestNews = news.titulo || news.title || 'Sin Título'; bestLikes = l; bestDislikes = d; bestInt = news.total_interacciones; 
             }
             // Worst news is highest disapproval with some volume
             if (disapproval > (1 - worstRatio) && total > 5) {
-               worstRatio = approval; worstNews = news.titulo; worstLikes = l; worstDislikes = d; worstInt = news.total_interacciones;
+               worstRatio = approval; worstNews = news.titulo || news.title || 'Sin Título'; worstLikes = l; worstDislikes = d; worstInt = news.total_interacciones;
             }
           }
         });
         
         // Failsafe if data is too small to trigger the total > 5 condition
-        if (!bestNews) { bestNews = stats.topNews[0].titulo; bestLikes = stats.topNews[0].likes; bestDislikes = stats.topNews[0].dislikes; bestRatio = 0.94; bestInt = stats.topNews[0].total_interacciones; }
-        if (!worstNews && stats.topNews.length > 1) { worstNews = stats.topNews[1].titulo; worstLikes = stats.topNews[1].likes; worstDislikes = stats.topNews[1].dislikes; worstRatio = 0.75; worstInt = stats.topNews[1].total_interacciones; }
+        if (!bestNews) { bestNews = stats.topNews[0].titulo || stats.topNews[0].title || 'Sin Título'; bestLikes = stats.topNews[0].likes; bestDislikes = stats.topNews[0].dislikes; bestRatio = 0.94; bestInt = stats.topNews[0].total_interacciones; }
+        if (!worstNews && stats.topNews.length > 1) { worstNews = stats.topNews[1].titulo || stats.topNews[1].title || 'Sin Título'; worstLikes = stats.topNews[1].likes; worstDislikes = stats.topNews[1].dislikes; worstRatio = 0.75; worstInt = stats.topNews[1].total_interacciones; }
 
         doc.setFontSize(12);
         doc.setTextColor(60, 60, 60);
@@ -265,7 +265,7 @@ const AnalyticsDashboard = () => {
         
         return {
           'ID_Noticia': news.id,
-          'Título_Publicación': news.titulo,
+          'Título_Publicación': news.titulo || news.title || 'Sin Título',
           'Fecha_Lanzamiento': new Date(news.fecha_creacion).toLocaleDateString(),
           'Total_Interacciones': totalInt,
           'Likes': likes,
@@ -303,13 +303,16 @@ const AnalyticsDashboard = () => {
   };
 
   // Preparar datos para el gráfico (Top 5 para que se vea bien)
-  const chartData = (stats.topNews || []).slice(0, 5).map(news => ({
-    name: news.titulo.length > 20 ? news.titulo.substring(0, 20) + '...' : news.titulo,
-    Likes: parseInt(news.likes) || 0,
-    Valoraciones: parseInt(news.rates_count) || 0,
-    Dislikes: parseInt(news.dislikes) || 0,
-    total: parseInt(news.total_interacciones) || 0
-  }));
+  const chartData = (stats.topNews || []).slice(0, 5).map(news => {
+    const titulo = news.titulo || news.title || 'Sin Título';
+    return {
+      name: titulo.length > 20 ? titulo.substring(0, 20) + '...' : titulo,
+      Likes: parseInt(news.likes) || 0,
+      Valoraciones: parseInt(news.rates_count) || 0,
+      Dislikes: parseInt(news.dislikes) || 0,
+      total: parseInt(news.total_interacciones) || 0
+    };
+  });
 
   // Preparar datos de horas de conexión
   const connectionChartData = Array.from({ length: 24 }, (_, i) => {
@@ -533,7 +536,7 @@ const AnalyticsDashboard = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 font-medium text-slate-200">
-                      {news.titulo}
+                      {news.titulo || news.title || 'Sin Título'}
                     </td>
                     <td className="px-6 py-4 text-slate-400">
                       {new Date(news.fecha_creacion).toLocaleDateString()}
@@ -577,7 +580,7 @@ const AnalyticsDashboard = () => {
             
             <div className="p-6">
               <p className="mb-6 text-sm text-slate-300 font-medium leading-relaxed">
-                {selectedNews.titulo}
+                {selectedNews?.titulo || selectedNews?.title || 'Sin Título'}
               </p>
               
               <div className="space-y-4">

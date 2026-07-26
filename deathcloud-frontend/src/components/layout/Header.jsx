@@ -14,7 +14,7 @@ export default function Header({ user, onLogout, onToggleChat, credits, onLoginT
   
   const getImageUrl = (imagePath) => {
     if (!imagePath || imagePath === 'none' || imagePath === 'not-found') return imagePath;
-    if (imagePath.startsWith('http')) return imagePath;
+    if (imagePath.startsWith('http') || imagePath.startsWith('blob') || imagePath.startsWith('data:')) return imagePath;
     const base = (import.meta.env.VITE_API_URL || '/api').replace(/\/api$/, '');
     return `${base}${imagePath}`;
   };
