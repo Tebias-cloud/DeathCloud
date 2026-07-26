@@ -123,4 +123,4 @@ Si deseas clonar el repositorio y ejecutar la aplicación frontend en tu computa
 **Esteban Vidal**
 *   🐙 **[GitHub](https://github.com/Tebias-cloud)**
 *   💼 **[LinkedIn](https://www.linkedin.com/in/esteban-vidal-dev/)**
-*   💻 **[Portafolio Web](https://estebanvidal.dev)**
+*   💻 **[Portafolio Web](https://esteban-vidal.vercel.app/)**
