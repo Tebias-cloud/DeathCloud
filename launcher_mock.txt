@@ -1,17 +1,20 @@
 ========================================================================
-             DEATHCLOUD GAME LAUNCHER (CLIENT MOCKUP v1.0)
+🚀 DEATHCLOUD CORE LAUNCHER - SIMULATION SYSTEM
 ========================================================================
 
-¡Bienvenido, Piloto del Comando Nexus!
+¡Transmisión Completa!
 
-Este es un archivo de descarga temporal que simula el instalador o
-launcher oficial de Death Cloud. 
+Has iniciado el simulador de enlace de juego DeathCloud.
+Esta demo interactiva está corriendo en modo estático en GitHub Pages.
 
-Una vez que el desarrollo del launcher finalice y se disponga de la
-versión ejecutable (ej. launcher.exe, setup.msi o launcher.zip),
-simplemente reemplace este archivo en el directorio 'public' por el
-instalador real con el nombre de archivo correspondiente.
+Detalles de la Simulación:
+- Entorno: GitHub Pages
+- Host de Datos: LocalStorage (Browser Database)
+- Protocolo Social: Mock WebSockets
+- Estado de Red: OFFLINE / STANDALONE
 
----
-© 2026 Death Cloud. Todos los derechos reservados.
+El juego ya está listo para jugarse y la demo funciona al 100%.
+
+========================================================================
+¡Gracias por probar la demo de DeathCloud!
 ========================================================================
